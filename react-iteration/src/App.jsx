@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 
 import CohortInfo from './components/CohortInfo';
-import StudentInfo from './components/StudentInfo';
+// import StudentInfo from './components/StudentInfo';
 
 const cohorts = [
   {
