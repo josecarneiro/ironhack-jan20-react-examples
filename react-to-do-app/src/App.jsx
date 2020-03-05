@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
-import './App.css';
 
 import TaskList from './components/TaskList';
+import TaskInput from './components/TaskInput';
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
       tasks: [],
-      contentOfNewTask: '',
       query: ''
     };
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.addTask = this.addTask.bind(this);
+    this.handleTaskRemoval = this.handleTaskRemoval.bind(this);
+    this.handleTaskAddition = this.handleTaskAddition.bind(this);
   }
 
   handleInputChange(event) {
@@ -24,16 +24,9 @@ class App extends Component {
     });
   }
 
-  addTask(event) {
-    event.preventDefault();
-    const content = this.state.contentOfNewTask;
-    const task = {
-      id: Date.now().toString(),
-      content
-    };
+  handleTaskAddition(task) {
     this.setState(previousState => ({
-      tasks: [...previousState.tasks, task],
-      contentOfNewTask: ''
+      tasks: [...previousState.tasks, task]
     }));
   }
 
@@ -45,6 +38,13 @@ class App extends Component {
     return filteredTasks;
   }
 
+  handleTaskRemoval(id) {
+    const remainingTasks = this.state.tasks.filter(task => task.id !== id);
+    this.setState({
+      tasks: remainingTasks
+    });
+  }
+
   render() {
     // const filteredTasks = this.state.tasks.filter(task => {
     //   return task.content.toLowerCase().includes(this.state.query.toLowerCase());
@@ -54,16 +54,6 @@ class App extends Component {
 
     return (
       <div className="App">
-        <form onSubmit={this.addTask}>
-          <input
-            type="text"
-            name="contentOfNewTask"
-            value={this.state.contentOfNewTask}
-            onChange={this.handleInputChange}
-            placeholder="Insert task here..."
-          />
-          <button>+</button>
-        </form>
         <form>
           <input
             type="search"
@@ -71,14 +61,16 @@ class App extends Component {
             value={this.state.query}
             onChange={this.handleInputChange}
             placeholder="Search for anything..."
+            autoComplete="off"
           />
         </form>
+        <TaskInput addTask={this.handleTaskAddition} />
         {/* <ul>
           {this.state.tasks.map(task => (
             <li key={task.id}>{task.content}</li>
           ))}
         </ul> */}
-        <TaskList tasks={this.filteredTasks} />
+        <TaskList tasks={this.filteredTasks} removeTask={this.handleTaskRemoval} />
       </div>
     );
   }
