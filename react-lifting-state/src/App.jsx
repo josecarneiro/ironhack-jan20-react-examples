@@ -25,7 +25,6 @@ class App extends Component {
     return (
       <div className="App">
         <Counter value={this.state.count} onCountChange={this.handleCountChange} />
-        <Counter value={this.state.count} onCountChange={this.handleCountChange} />
       </div>
     );
   }

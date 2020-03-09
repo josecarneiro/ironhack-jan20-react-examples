@@ -1,16 +1,23 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-const Counter = props => {
-  const increment = () => {
-    props.onCountChange(props.value + 1);
-  };
+class Counter extends Component {
+  constructor(props) {
+    super(props);
+    console.log('Component was constructed');
+  }
 
-  return (
-    <div>
-      <span>{props.value}</span>
-      <button onClick={increment}>+</button>
-    </div>
-  );
-};
+  render() {
+    const increment = () => {
+      this.props.onCountChange(this.props.value + 1);
+    };
+
+    return (
+      <div>
+        <span>{this.props.value}</span>
+        <button onClick={increment}>+</button>
+      </div>
+    );
+  }
+}
 
 export default Counter;
