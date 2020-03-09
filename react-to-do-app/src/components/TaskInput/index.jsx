@@ -22,7 +22,6 @@ class TaskInput extends Component {
     const content = this.state.contentOfNewTask;
     if (!content) return;
     const task = {
-      id: Date.now().toString(),
       content
     };
     this.props.addTask(task);

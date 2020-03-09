@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as taskService from './services/task';
 
 import TaskList from './components/TaskList';
 import TaskInput from './components/TaskInput';
@@ -16,42 +17,64 @@ class App extends Component {
   }
 
   handleInputChange(event) {
-    // const value = event.target.value;
-    // const name = event.target.name;
     const { name, value } = event.target;
     this.setState({
       [name]: value
     });
   }
 
+  componentDidMount() {
+    this.listTasks();
+  }
+
+  listTasks() {
+    taskService
+      .list()
+      .then(tasks => {
+        this.setState({
+          tasks
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
   handleTaskAddition(task) {
-    this.setState(previousState => ({
-      tasks: [...previousState.tasks, task]
-    }));
+    taskService
+      .create(task)
+      .then(data => {
+        this.setState(previousState => ({
+          tasks: [data, ...previousState.tasks]
+        }));
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  handleTaskRemoval(id) {
+    taskService
+      .remove(id)
+      .then(() => {
+        const remainingTasks = this.state.tasks.filter(task => task._id !== id);
+        this.setState({
+          tasks: remainingTasks
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   get filteredTasks() {
-    // console.log('Getter was computed');
     const filteredTasks = this.state.tasks.filter(task => {
       return task.content.toLowerCase().includes(this.state.query.toLowerCase());
     });
     return filteredTasks;
   }
 
-  handleTaskRemoval(id) {
-    const remainingTasks = this.state.tasks.filter(task => task.id !== id);
-    this.setState({
-      tasks: remainingTasks
-    });
-  }
-
   render() {
-    // const filteredTasks = this.state.tasks.filter(task => {
-    //   return task.content.toLowerCase().includes(this.state.query.toLowerCase());
-    // });
-
-    // console.log(this.filteredTasks);
-
     return (
       <div className="App">
         <form>
